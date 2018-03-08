@@ -19,6 +19,7 @@ import getopt
 import errno
 import getpass
 from biplist import * 
+from optparse import OptionParser
 # 导入 ../../base/ 中的代码
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(os.path.realpath(__file__)), os.pardir, os.pardir,"base")))
 import FileCopy
@@ -49,12 +50,8 @@ debug='+_ops.debug+';\
 buildPath='+_ops.targetFolder+';\
 title='+_ops.title+';\
 webOrientation='+_ops.webOrientation+';\
-webOrientation='+_ops.webOrientation+';\
 "'
-	'''
-	python /Users/jiasy/Documents/sourceFrame/pythonToolBase/game_tools/build/CocosCreatorBuild.py --projectFolder /Users/jiasy/Documents/develop/doudoule/hall/taianClient/ --targetFolder /Users/jiasy/Documents/develop/doudoule/hall/Server/client/ --platform web-mobile --debug false --title 泰山棋牌 --webOrientation landscape
-	'''
 
 	print "_cmd = " + str(_cmd)
-	SysCmd.doShellGetOutPut(_cmd)
+	# SysCmd.doShellGetOutPut(_cmd)
 	

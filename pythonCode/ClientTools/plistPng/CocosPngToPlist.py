@@ -19,6 +19,7 @@ import getopt
 import errno
 import getpass
 from biplist import * 
+from optparse import OptionParser
 # 导入 ../../base/ 中的代码
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(os.path.realpath(__file__)), os.pardir, os.pardir,"base")))
 import FileCopy

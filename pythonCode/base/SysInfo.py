@@ -32,15 +32,17 @@ def getOps(opsDict_,parse_):
 			sys.exit(1)
 		else:
 			_ops.__dict__[_key] = getCmdStr(_ops.__dict__[_key])
-			# 字符串 标示的是 boolean 值，那么就转换一下
-			if _ops.__dict__[_key] == "True":
-				_ops.__dict__[_key] = True
-			elif _ops.__dict__[_key] == "False":
-				_ops.__dict__[_key] = False
-			else:
-				_ops.__dict__[_key] = _ops.__dict__[_key]
 	return _ops
 
+def getBoolByStr(str_):
+	# 字符串 标示的是 boolean 值，那么就转换一下
+	if str_ == "True":
+		return True
+	elif str_ == "False":
+		return False
+	else:
+		print "ERROR str_ 必须是 True/False 中的一个"
+		sys.exit(1)
 
 # 设置参数
 # <_> 转换回 空格

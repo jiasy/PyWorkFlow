@@ -60,14 +60,12 @@ def checkWidthAndHeight(picPath_,maxWidth_,maxHeight_):
 	else:
 		return None
 
-
 def getNextLevel(int_):
 	_sizeLevelList = [2, 4, 8, 16, 32, 64, 128, 256, 512, 1024, 2048]
 	_currentLevel = 0
 	while int_ > _sizeLevelList[_currentLevel]:
 		_currentLevel += 1
 	return int(_sizeLevelList[_currentLevel])
-
 
 # 修改所需属性
 opsDict = {}
@@ -79,12 +77,13 @@ opsDict["onlyCalculateArea"] = '只计算面积'
 # python PngSizeCheck1024.py -targetFolder 要校验的文件夹
 if __name__ == '__main__':
 	_ops = SysInfo.getOps(opsDict,OptionParser())
+	# boolean 值转换。
+	_ops.onlyCalculateArea = SysInfo.getBoolByStr(_ops.onlyCalculateArea)
 	_currentFolder = SysInfo.fixFolderPath(os.path.dirname(os.path.realpath(__file__)))
 	# 图片路径集合
 	_pngList = FileReadWrite.getFilePathsByType(_ops.targetFolder,"png")
 	_jpgList = FileReadWrite.getFilePathsByType(_ops.targetFolder,"jpg")
 	_picList = _pngList + _jpgList
-
 	# 不合条件的集合
 	_overList = []
 	for _i in range(len(_picList)):
