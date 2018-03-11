@@ -46,6 +46,8 @@ from biplist import *
 # 				break
 # 	return _sheetDict
 
+
+# KeyValue ------------------------------------------------------------------------------------
 def dictFromExcelSheet(sheet_):
     _sheetDict = {}
     _haveStartBool = False
@@ -76,3 +78,20 @@ def dictFromExcelFile(excelPath_):
             _sheetName = _sheetName.encode('utf-8')
         _configDict[_sheetName] = dictFromExcelSheet(_workBook.sheet_by_name(_sheetName))
     return _configDict
+
+# 获取 执行命令那一个格子
+def getExcuteCmd(excelPath_):
+    _workBook = xlrd.open_workbook(excelPath_)
+    _configDict = {}
+    for _sheetName in _workBook.sheet_names():
+        if isinstance(_sheetName, unicode):
+            _sheetName = _sheetName.encode('utf-8')
+        _sheet = _workBook.sheet_by_name(_sheetName)
+        # 逐行判断
+        for _rowNum in range(0,_sheet.nrows):
+            if str(_sheet.cell(_rowNum, 1).value) == "复制命令行":
+                return str(_sheet.cell(_rowNum, 2).value)
+        print "ERROR 用来配置 pyWorkFlow 的 Excel 必须有 复制命令行。"
+        sys.exit(1)
+
+

@@ -39,7 +39,7 @@ if __name__ == '__main__':
 	_currentFolder = SysInfo.fixFolderPath(os.path.dirname(os.path.realpath(__file__)))
 	#记录要删除的文件
 	_deleteFiles = []
-	FileReadWrite.gci(_ops.targetFolder,_ops.filters.split(","),_deleteFiles)
+	FileReadWrite.gci(_ops.targetFolder,_ops.filters,_deleteFiles)
 	#删除掉满足条件的文件
 	for _i in range(len(_deleteFiles)):
 		os.remove(_deleteFiles[_i])
