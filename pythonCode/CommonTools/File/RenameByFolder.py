@@ -39,13 +39,13 @@ opsDict["regular"] = '正则表达式，注意括号要加\\'
 
 # ------------------------------------测试用例---------------------------------------------------------------------------------------
 if __name__ == '__main__':
-    _ops = SysInfo.getOps(opsDict,OptionParser())
-    _currentFolder = SysInfo.fixFolderPath(os.path.dirname(os.path.realpath(__file__)))
-    # 递归遍历文件夹 -------------------------------------------
-    _filePathList = []
-    FileReadWrite.getAllFilePath(_ops.targetFolder,_filePathList)
-    # 获取所有的子文件路径
-    for _i in range(len(_filePathList)):
+	_ops = SysInfo.getOps(opsDict,OptionParser())
+	_currentFolder = SysInfo.fixFolderPath(os.path.dirname(os.path.realpath(__file__)))
+	# 递归遍历文件夹 -------------------------------------------
+	_filePathList = []
+	FileReadWrite.getAllFilePath(_ops.targetFolder,_filePathList)
+	# 获取所有的子文件路径
+	for _i in range(len(_filePathList)):
 		_filePath = _filePathList[_i]
 		# 文件所在目录
 		_folderPath = os.path.dirname(_filePath)

@@ -39,28 +39,28 @@ opsDict["outputJsonFolderPath"] = '文件路径，每一个Sheet一个文件夹�
 # 每一个数列value形成一个单一的文件，放置到 outputJsonFolderPath/[Sheet名称]/[数列名称].xlsx
 # ------------------------------------测试用例---------------------------------------------------------------------------------------
 if __name__ == '__main__':
-    _ops = SysInfo.getOps(opsDict,OptionParser())
-    _currentFolder = SysInfo.fixFolderPath(os.path.dirname(os.path.realpath(__file__)))
-    # 重新创建输出文件夹
-    if os.path.exists(_ops.outputJsonFolderPath):
-        shutil.rmtree(_ops.outputJsonFolderPath)
-    FileReadWrite.makeDirPlus(_ops.outputJsonFolderPath)
-    # 解析每一个Excel文件
-    _excelPaths = _ops.excelPaths.split(",")
-    for _i in range(len(_excelPaths)):
-        _excelName = SysInfo.justName(_excelPaths[_i])
-        _excelFolderPath = os.path.join(_ops.outputJsonFolderPath,_excelName)
-        FileReadWrite.makeDirPlus(_excelFolderPath)
-        _excelDict = Excel.dictFromExcelFile(_excelPaths[_i])
-        for _sheetName in _excelDict:
-            # 创建每一个Sheet 的文件夹
-            _sheetFolderPath = os.path.join(_excelFolderPath,_sheetName)
-            FileReadWrite.makeDirPlus(_sheetFolderPath)
-            _sheetDict = _excelDict[_sheetName]
-            for _colName in _sheetDict:
-                # 创建每一个数列的文件
-                _colDict = _sheetDict[_colName]
-                FileReadWrite.writeFileWithStr(os.path.join(_sheetFolderPath,_colName+".json") , str(json.dumps( _colDict, indent=4, sort_keys=False, ensure_ascii=False)))
+	_ops = SysInfo.getOps(opsDict,OptionParser())
+	_currentFolder = SysInfo.fixFolderPath(os.path.dirname(os.path.realpath(__file__)))
+	# 重新创建输出文件夹
+	if os.path.exists(_ops.outputJsonFolderPath):
+		shutil.rmtree(_ops.outputJsonFolderPath)
+	FileReadWrite.makeDirPlus(_ops.outputJsonFolderPath)
+	# 解析每一个Excel文件
+	_excelPaths = _ops.excelPaths.split(",")
+	for _i in range(len(_excelPaths)):
+		_excelName = SysInfo.justName(_excelPaths[_i])
+		_excelFolderPath = os.path.join(_ops.outputJsonFolderPath,_excelName)
+		FileReadWrite.makeDirPlus(_excelFolderPath)
+		_excelDict = Excel.dictFromExcelFile(_excelPaths[_i])
+		for _sheetName in _excelDict:
+			# 创建每一个Sheet 的文件夹
+			_sheetFolderPath = os.path.join(_excelFolderPath,_sheetName)
+			FileReadWrite.makeDirPlus(_sheetFolderPath)
+			_sheetDict = _excelDict[_sheetName]
+			for _colName in _sheetDict:
+				# 创建每一个数列的文件
+				_colDict = _sheetDict[_colName]
+				FileReadWrite.writeFileWithStr(os.path.join(_sheetFolderPath,_colName+".json") , str(json.dumps( _colDict, indent=4, sort_keys=False, ensure_ascii=False)))
 
 
 

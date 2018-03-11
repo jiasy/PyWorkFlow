@@ -37,9 +37,9 @@ opsDict["filters"] = '过滤用后缀'
 # 满足后缀条件的文件，进行文件迁移，文件夹结构不变
 # ------------------------------------测试用例---------------------------------------------------------------------------------------
 if __name__ == '__main__':
-    _ops = SysInfo.getOps(opsDict,OptionParser())
-    _currentFolder = SysInfo.fixFolderPath(os.path.dirname(os.path.realpath(__file__)))
-    # # Notice 
-    # "a,b,c" 这样的参数自动当成是list
-    # 多行的数组，会用 "," 区分
-    FileCopy.copy_files_with_config_base(_ops.filters,_ops.sourceFolder,_ops.targetFolder,False)
+	_ops = SysInfo.getOps(opsDict,OptionParser())
+	_currentFolder = SysInfo.fixFolderPath(os.path.dirname(os.path.realpath(__file__)))
+	# # Notice 
+	# "a,b,c" 这样的参数自动当成是list
+	# 多行的数组，会用 "," 区分
+	FileCopy.copy_files_with_config_base(_ops.filters,_ops.sourceFolder,_ops.targetFolder,False)

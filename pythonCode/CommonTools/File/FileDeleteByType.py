@@ -35,9 +35,9 @@ opsDict["filters"] = '过滤用后缀'
 # 满足后缀条件的文件，删除
 # ------------------------------------测试用例---------------------------------------------------------------------------------------
 if __name__ == '__main__':
-    _ops = SysInfo.getOps(opsDict,OptionParser())
-    _currentFolder = SysInfo.fixFolderPath(os.path.dirname(os.path.realpath(__file__)))
-    #记录要删除的文件
+	_ops = SysInfo.getOps(opsDict,OptionParser())
+	_currentFolder = SysInfo.fixFolderPath(os.path.dirname(os.path.realpath(__file__)))
+	#记录要删除的文件
 	_deleteFiles = []
 	FileReadWrite.gci(_ops.targetFolder,_ops.filters.split(","),_deleteFiles)
 	#删除掉满足条件的文件

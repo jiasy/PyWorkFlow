@@ -39,7 +39,7 @@ opsDict["outputPath"] = '替换完之后放置的位置，包含文件名及后�
 # 将替换完的文件，放置到 outputPath 路径下。
 # ------------------------------------测试用例---------------------------------------------------------------------------------------
 if __name__ == '__main__':
-    _ops = SysInfo.getOps(opsDict,OptionParser())
-    _currentFolder = SysInfo.fixFolderPath(os.path.dirname(os.path.realpath(__file__)))
+	_ops = SysInfo.getOps(opsDict,OptionParser())
+	_currentFolder = SysInfo.fixFolderPath(os.path.dirname(os.path.realpath(__file__)))
 
 
