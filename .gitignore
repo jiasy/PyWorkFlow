@@ -5,3 +5,4 @@ excel/_work_*
 ~$excelToJson.xlsx
 ~$copyFile.xlsx
 ~$KeyValueToCode.xlsx
+~$ReplaceTempletByKeyValueJson.xlsx

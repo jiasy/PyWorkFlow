@@ -48,7 +48,7 @@ if __name__ == '__main__':
 	# 重新创建输出文件夹
 	if os.path.exists(_ops.outputFolderPath):
 		shutil.rmtree(_ops.outputFolderPath)
-	FileReadWrite.makeDirPlus(_ops.outputFolderPath)
+	os.makedirs(_ops.outputFolderPath)
 	
 	if _ops.codeType == "java":
 		_classArr = FileReadWrite.contentFromFile(_java_templet_path).split(_splitStr)

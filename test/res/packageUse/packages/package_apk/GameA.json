@@ -1,0 +1,6 @@
+{
+    "app_id": "com.pyWorkFlow.GameA", 
+    "app_name": "GameA",
+    "UMENG_APPKEY":"友盟的AppKey",
+    "MW_APPID":"魔窗的AppKey"
+}

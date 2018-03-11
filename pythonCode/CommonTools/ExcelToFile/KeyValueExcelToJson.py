@@ -44,7 +44,8 @@ if __name__ == '__main__':
 	# 重新创建输出文件夹
 	if os.path.exists(_ops.outputJsonFolderPath):
 		shutil.rmtree(_ops.outputJsonFolderPath)
-	FileReadWrite.makeDirPlus(_ops.outputJsonFolderPath)
+	os.makedirs(_ops.outputJsonFolderPath)
+
 	# 解析每一个Excel文件
 	_excelPaths = _ops.excelPaths.split(",")
 	for _i in range(len(_excelPaths)):
@@ -61,8 +62,3 @@ if __name__ == '__main__':
 				# 创建每一个数列的文件
 				_colDict = _sheetDict[_colName]
 				FileReadWrite.writeFileWithStr(os.path.join(_sheetFolderPath,_colName+".json") , str(json.dumps( _colDict, indent=4, sort_keys=False, ensure_ascii=False)))
-
-
-
-
-
