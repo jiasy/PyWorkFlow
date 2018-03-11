@@ -6,12 +6,13 @@
 	好处 : Excel虽然比json重，但是会用的人多，尤其是策划。往往策划美术不会执行脚本，Excel给他们提供了一个复制粘贴就能运行脚本的能力。
     用处 : 前端打包，热更新推送，后端服务器代码上传，图标分发到工程，小图合并大图等等，只要是支持命令行的，都支持。
     复杂用途 : 可以自己配置一整套流程例如以下流程[可以从各个实例Excel中复制粘贴成一个全新的Excel]
-                    生成携带SDK的参数的代码
-                    生成配置文件
-                    图标变更
-                    根据游戏换图
-                    Info.plist、mainfest.xml的参数替换
-                    Xcode打包，AndroidStudio打包
-                    上传蒲公英、fir、testFlight
-                    推送后端配置，重启服务器
+                    生成携带SDK的参数的代码    [键值对生成代码 excel/code/KeyValueToCode.xlsx]
+                    生成配置文件    [Excel导出Json文件 excel/excelToFile/excelToJson.xlsx]
+                    图标变更    [图标复制成各种大小，分发到对应工程 excel/picture/IconDuplicate.xlsx]
+                    美术素材的小图合并大图    [图片合并拆分 excel/test/work_flow_test.xlsx]
+                    根据游戏换图    [文件拷贝，结构不变的同名覆盖 excel/file/copyFile.xlsx]
+                    Info.plist、mainfest.xml的参数替换    [文件拷贝，结构不变的同名覆盖 excel/file/ReplaceTempletByKeyValueJson.xlsx]
+                    Xcode打包，AndroidStudio打包    [工程打包 excel/build/CocosCreatorBuild.xlsx]
+                    上传蒲公英、fir、testFlight    [网上有现成的，拷贝一个做一个py脚本即可]
+                    推送后端配置，重启服务器    [网上有现成的，拷贝一个做一个py脚本即可]
               Jenkis 下，用 pythonCode/CommonTools/Jenkins/ExcuteWorkFlowByExcel.py 可以根据Excel名，直接执行它所配置的工作流
