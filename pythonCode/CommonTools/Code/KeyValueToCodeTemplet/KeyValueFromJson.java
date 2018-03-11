@@ -5,3 +5,7 @@ public final class KeyValueFromJson {
 	public static final String testKey = "testValue";
 	//KeyValue===============================================
 }
+
+//调用
+//import com.pyWorkFlow.KeyValue.KeyValueFromJson;
+//KeyValueFromJson.testKey
