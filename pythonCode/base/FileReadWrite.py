@@ -17,7 +17,6 @@ import getopt
 import errno
 import getpass
 from biplist import * 
-from SysInfo import fixFolderPath
 
 # ------------------------------------文件读写--------------------------------------------------------------------------------
 # 文件是否含有字符串
@@ -36,10 +35,17 @@ def fileHasString(filePath_, string_):
 		print(filePath_, e)
 	return return_value
 
+# 重新创建一个空文件夹
+def reCreateFolder(folderPath_):
+	if os.path.exists(folderPath_):
+		shutil.rmtree(folderPath_)
+	os.makedirs(folderPath_)
+
 def contentFromFile(filePath_):
 	_file = open(filePath_, 'r')
 	_backStr = _file.read()
 	return _backStr
+
 #json文件直接读取成字典
 def dictFromJsonFile(jsonPath_):
 	return json.loads(contentFromFile(jsonPath_))
@@ -61,7 +67,7 @@ def getFilePathsByType(folderPath_, fileType_):
 	for _parent, _dir_names, _file_names in os.walk(folderPath_):
 		for _file_name in _file_names:
 			if _file_name.split(".")[1] == fileType_:
-				_file_path = fixFolderPath(_parent) + _file_name
+				_file_path = os.path.join(_parent,_file_name)
 				_filePathList.append(_file_path)
 	return _filePathList
 #获取这个类型的文件的路径集合
@@ -70,7 +76,7 @@ def getFileContentByType(folderPath_, fileType_):
 	for _parent, _dir_names, _file_names in os.walk(folderPath_):
 		for _file_name in _file_names:
 			if _file_name.split(".")[1] == fileType_:
-				_file_path = fixFolderPath(_parent) + _file_name
+				_file_path = os.path.join(_parent,_file_name)
 				_fileContentDict[_file_path]=contentFromFile(_file_path)
 	return _fileContentDict
 
@@ -79,7 +85,7 @@ def deleteFileTypeInFolder(folderPath_, fileType_):
 	for _parent, _dir_names, _file_names in os.walk(folderPath_):
 		for _file_name in _file_names:
 			if _file_name.split(".")[1] == fileType_:
-				os.remove(fixFolderPath(_parent) + _file_name)
+				os.remove(os.path.join(_parent,_file_name))
 
 #写文件
 def writeFileWithStr(filePath_, codeStr_):

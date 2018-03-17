@@ -44,9 +44,7 @@ if __name__ == '__main__':
 	_outputFolder = os.path.dirname(_ops.outputPath)
 	print "_outputFolder = " + str(_outputFolder)
 	# 重新创建输出文件夹
-	if os.path.exists(_outputFolder):
-		shutil.rmtree(_outputFolder)
-	os.makedirs(_outputFolder)
+	FileReadWrite.reCreateFolder(_outputFolder)
 
 	for _key in _keyValueDict:
 		_templetContent = _templetContent.replace("${"+_key+"}" , _keyValueDict[_key])

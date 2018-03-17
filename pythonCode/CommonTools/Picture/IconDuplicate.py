@@ -68,13 +68,8 @@ if __name__ == '__main__':
     }
 
     # 重新创建输出文件夹
-    if os.path.exists(_ops.iosIconsPath):
-        shutil.rmtree(_ops.iosIconsPath)
-    os.makedirs(_ops.iosIconsPath)
-
-    if os.path.exists(_ops.androidIconsPath):
-        shutil.rmtree(_ops.androidIconsPath)
-    os.makedirs(_ops.androidIconsPath)
+    FileReadWrite.reCreateFolder(_ops.iosIconsPath)
+    FileReadWrite.reCreateFolder(_ops.androidIconsPath)
 
     for _key, _value in _iosSizes.items():
         _IOSFileName = os.path.join(_ops.iosIconsPath, 'Icon-' + _key + '.png')

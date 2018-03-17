@@ -44,11 +44,8 @@ if __name__ == '__main__':
 	_oc_mm_templet_path = os.path.join(_templetFolder,"KeyValueFromJson.mm")
 	_java_templet_path = os.path.join(_templetFolder,"KeyValueFromJson.java")
 	_splitStr = "//KeyValue==============================================="
-
 	# 重新创建输出文件夹
-	if os.path.exists(_ops.outputFolderPath):
-		shutil.rmtree(_ops.outputFolderPath)
-	os.makedirs(_ops.outputFolderPath)
+	FileReadWrite.reCreateFolder(_ops.outputFolderPath)
 	
 	if _ops.codeType == "java":
 		_classArr = FileReadWrite.contentFromFile(_java_templet_path).split(_splitStr)

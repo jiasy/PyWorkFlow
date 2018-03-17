@@ -52,6 +52,6 @@ title='+_ops.title+';\
 webOrientation='+_ops.webOrientation+';\
 "'
 
-	print "_cmd = " + str(_cmd)
+	print "执行构建命令 : " + str(_cmd)
 	# SysCmd.doShellGetOutPut(_cmd)
 	

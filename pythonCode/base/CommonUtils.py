@@ -19,13 +19,16 @@ import getpass
 from biplist import *
 
 
-# 参数字符串，转换成字典。 kvSplit_ 传递 < : >
-# a : b,c : d -> {{a:b},{c:d}}
-def strListToDict(str_, kvSplit_):
+# 参数字符串，转换成字典。
+# a:b,c:d -> {{a:b},{c:d}}
+def strListToDict(str_):
+	# , 分割每一组键值
 	_strList = str_.split(",")
 	_backDict = {}
 	for _i in range(len(_strList)):
 		_strItem = _strList[_i]
-		_strKV = _strItem.split(kvSplit_)
+		# : 分割键值对
+		_strKV = _strItem.split(":")
 		_backDict[_strKV[0]] = _strKV[1]
 	return _backDict
+

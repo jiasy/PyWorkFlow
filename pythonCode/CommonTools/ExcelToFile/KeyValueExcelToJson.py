@@ -42,9 +42,7 @@ if __name__ == '__main__':
 	_ops = SysInfo.getOps(opsDict,OptionParser())
 	_currentFolder = SysInfo.fixFolderPath(os.path.dirname(os.path.realpath(__file__)))
 	# 重新创建输出文件夹
-	if os.path.exists(_ops.outputJsonFolderPath):
-		shutil.rmtree(_ops.outputJsonFolderPath)
-	os.makedirs(_ops.outputJsonFolderPath)
+	FileReadWrite.reCreateFolder(_ops.outputJsonFolderPath)
 
 	# 解析每一个Excel文件
 	_excelPaths = _ops.excelPaths.split(",")

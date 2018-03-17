@@ -23,7 +23,6 @@ from SysInfo import os_is_32bit_windows
 from SysInfo import os_is_mac 
 from SysInfo import os_is_linux 
 from SysInfo import add_path_prefix 
-from SysInfo import fixFolderPath
 
 # 文件夹 同结构拷贝
 def copy_files_with_config_base(suffix_,src_root, dst_root,log_):

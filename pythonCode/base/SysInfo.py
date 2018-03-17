@@ -18,20 +18,42 @@ import errno
 import getpass
 from biplist import *
 from optparse import OptionParser
+from FileReadWrite import dictFromJsonFile
 
 
 # 获取校验参数
 def getOps(opsDict_,parse_):
+	# 获取临时文件夹路径
+	_tempFolder = os.path.abspath(os.path.join(os.path.dirname(os.path.realpath(__file__)), os.pardir, os.pardir,"temp"))
+	_jenkinsParameterPath = os.path.join(_tempFolder,"currentJenkinsParameter.json")
+	_jenkinsParameterDict = None
+	if os.path.exists(_jenkinsParameterPath):
+		# 如果有jenkins的参数共享，就取出来
+		_jenkinsParameterDict = dictFromJsonFile(_jenkinsParameterPath)
+
+	# 按照参数指定设置参数解析
 	for _key in opsDict_:
 		_val = opsDict_[_key]
 		parse_.add_option('', "--" + _key, dest=_key, help=_val)
+
+	# 取得传入的参数
 	_ops = parse_.parse_args()[0]  # 这里参数值对应的参数名存储在这个_ops字典里
+
+	# 解析每一个参数
 	for _key in opsDict_:
 		if not _ops.__dict__[_key]:
 			print "ERROR : 必须有 " + _key + " -> " + opsDict_[_key]
 			sys.exit(1)
 		else:
+			# 当参数是 jenkins.xx 的时候，代表从jenkins的共享参数中取数据
 			_ops.__dict__[_key] = getCmdStr(_ops.__dict__[_key])
+			if _ops.__dict__[_key].startswith("jenkins."):
+				if _jenkinsParameterDict:
+					# 取得 jenkins.xx 中的 xx，在共享参数中获取这个 xx 作为 key，取得共享参数中jenkins设置的值。
+					_ops.__dict__[_key] = _jenkinsParameterDict[_ops.__dict__[_key].split("jenkins.")[1]]
+				else:
+					print "ERROR : " + _ops.__dict__[_key] + " 中 jenkins. 代表需要从jenkins的共享参数中取值\n       但是，这个路径不存在 : " + _jenkinsParameterPath
+					sys.exit(1)
 	return _ops
 
 def getBoolByStr(str_):
