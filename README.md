@@ -11,8 +11,9 @@
                     图标变更    [图标复制成各种大小，分发到对应工程 excel/picture/IconDuplicate.xlsx]
                     美术素材的小图合并大图    [图片合并拆分 excel/test/work_flow_test.xlsx]
                     根据游戏换图    [文件拷贝，结构不变的同名覆盖 excel/file/copyFile.xlsx]
-                    Info.plist、mainfest.xml的参数替换    [文件拷贝，结构不变的同名覆盖 excel/file/ReplaceTempletByKeyValueJson.xlsx]
+                    Info.plist、mainfest.xml的参数替换    [键值对中的值替换掉模板中的键，生成新文件 excel/file/ReplaceTempletByKeyValueJson.xlsx]
                     Xcode打包，AndroidStudio打包    [工程打包 excel/build/CocosCreatorBuild.xlsx]
                     上传蒲公英、fir、testFlight    [网上有现成的，拷贝一个做一个py脚本即可]
                     推送后端配置，重启服务器    [网上有现成的，拷贝一个做一个py脚本即可]
               Jenkis 下，用 pythonCode/CommonTools/Jenkins/ExcuteWorkFlowByExcel.py 可以根据Excel名，直接执行它所配置的工作流
+                        [利用Jenkins参数打包 excel/build/CocosCreatorBuild_jenkins.xlsx]
