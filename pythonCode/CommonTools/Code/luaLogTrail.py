@@ -36,7 +36,8 @@ opsDict["targetFolderPath"] = 'lua所在的文件夹'
 # 过滤 log 可以先跑程序，然后那个输出比较多，比如计时器，循环之类的。
 # 按照相对路径带后缀名的一行，知道下一个带后缀名的一行之间，都是这个文件中要忽略的输出。
 opsDict["filterLogs"] = '需要过滤掉的Log'
-
+# 过滤 file 文件
+opsDict["filterFiles"] = '需要过滤掉的File'
 
 def replace_chars(match):
     char = match.group(0)
@@ -46,15 +47,15 @@ def replace_chars(match):
 def getLogOut(path_, funcName_, comment_, pass_, par_):
     _passStr = "True"
     if pass_ == False:
-        _passStr = "False"
-    return 'LogUtil.fo("' + path_ + '","' + funcName_ + '","' + comment_ + '",' + _passStr + ',' + par_ + ')' + "\n"
+        _passStr = "false"
+    return 'LogUtil:getInstance():fo("' + path_ + '","' + funcName_ + '","' + comment_ + '",' + _passStr + ',' + par_ + ')' + "\n"
 
 
 def getLogIn(path_, funcName_, comment_, pass_, par_):
     _passStr = "True"
     if pass_ == False:
-        _passStr = "False"
-    return 'LogUtil.fi("' + path_ + '","' + funcName_ + '","' + comment_ + '",' + _passStr + ',' + par_ + ')' + "\n"
+        _passStr = "true"
+    return 'LogUtil:getInstance():fi("' + path_ + '","' + funcName_ + '","' + comment_ + '",' + _passStr + ',' + par_ + ')' + "\n"
 
 
 # 在py代码的每一个方法中，进入
@@ -63,7 +64,9 @@ if __name__ == '__main__':
     _ops = SysInfo.getOps(opsDict, OptionParser())
     _currentFolder = SysInfo.fixFolderPath(os.path.dirname(os.path.realpath(__file__)))
     # 获取 工具类 位置
-    _luaUtilPath = os.path.join(_currentFolder, "luaLogTrailTemplet/log_trail_util.lua")
+    _luaUtilPath = os.path.join(_currentFolder, "luaLogTrailTemplet/LogTrailUtil.lua")
+    _luaUtilRelativePath = 'LogTrailUtil.lua'
+    _requireStr = 'local LogUtil = require("app.LogTrailUtil")'
 
     # 后缀
     _codeSuffix = ".lua"
@@ -78,6 +81,9 @@ if __name__ == '__main__':
     _filterLogsDict = CommonUtils.strToListDict(_ops.filterLogs, _codeSuffix)
     _filterPrints = CommonUtils.listDictToList(_filterLogsDict, _filterClassFuncJoin)
 
+    # 获取过滤的文件
+    _filterFilesList = list(_ops.filterFiles.split(","))
+
     # 过滤文件后缀
     _fileFilter = [_codeSuffix]
     # 过滤出来的文件列表
@@ -91,12 +97,17 @@ if __name__ == '__main__':
         _luaPath = _fileList[_i]
         _shortPath = SysInfo.getRelativePathWithOutSuffix(_ops.targetFolderPath, _luaPath, _codeSuffix)
         print _shortPath
+        if _shortPath in _filterFilesList:
+            print " 忽略"
+            continue
+
         _luaCodes = FileReadWrite.linesFromFile(_luaPath)
         # 方法的信息，自己的缩进，自己的名称
         _funcDict = {}
         _funcDict["name"] = ""
         _funcDict["spaceStr"] = None
         _isMultipleCommon = False
+        _isInFunction = 0
         # 每一行
         for _j in range(len(_luaCodes)):
             _line = _luaCodes[_j]
@@ -165,15 +176,64 @@ if __name__ == '__main__':
             if _changeBoo:
                 # print "Begin : "+_orginalLine.split("\n")[0]
                 # print "End   : "+_line
+                pass
 
             # 空白行跳过     ----------------------------------------------------------------------------------------
             if _line.strip() == "":
                 continue
 
+            # 默认认为,开始和结束，代码块是对等。结束端也不可能含有缩进
+            if _isInFunction != 0:
+                _funcReg_end = re.search(r'^end',_line)
+                if _funcReg_end:
+                    _isInFunction = 0
+            else:
+                # a.b = function(c)
+                # function a.b(c)
+                # function a:b(c)
+                # local a function(c)
+                _funcReg = re.search(r'^.*function.*', _line)
+                if _isInFunction==0 and _funcReg:
+                    #a.b = function(c)
+                    # 忽略有层级的内部函数
+                    #_funcReg_1 = re.search(r'^\s*([A-Za-z0-9_\.]+)\s*=\s*function\s*\((.*)\)\s*', _line)
+                    _funcReg_1 = re.search(r'^([A-Za-z0-9_\.]+)\s*=\s*function\s*\((.*)\)\s*', _line)
+                    if _funcReg_1:
+                        _isInFunction = _j
+                        #_funcReg_1_end = re.search(r'^\s*([A-Za-z0-9_\.]+)\s*=\s*function\s*\((.*)\)\s*(.*)end\s*', _line)
+                        _funcReg_1_end = re.search(r'^([A-Za-z0-9_\.]+)\s*=\s*function\s*\((.*)\)\s*(.*)end\s*', _line)
+                        # 当前行开始当前行结束
+                        if _funcReg_1_end:
+                            _isInFunction = 0
 
+                    # function a:b(c)
+                    # 忽略有层级的内部函数
+                    # _funcReg_2 = re.search(r'^\s*function\s+[0-9a-zA-Z_]+\s*\:\s*[0-9a-zA-Z_]+\((.*)\)\s*', _line)
+                    _funcReg_2 = re.search(r'^function\s+[0-9a-zA-Z_]+\s*\:\s*[0-9a-zA-Z_]+\((.*)\)\s*', _line)
+                    if _funcReg_2:
+                        _isInFunction = _j
+                        # _funcReg_2_end = re.search(r'^\s*function\s+[0-9a-zA-Z_]+\s*\:\s*[0-9a-zA-Z_]+\((.*)\)\s*(.*)end\s*', _line)
+                        _funcReg_2_end = re.search(r'^function\s+[0-9a-zA-Z_]+\s*\:\s*[0-9a-zA-Z_]+\((.*)\)\s*(.*)end\s*', _line)
+                        # 当前行开始当前行结束
+                        if _funcReg_2_end:
+                            _isInFunction = 0
+
+                    # function a.b(c)
+                    # 忽略有层级的内部函数
+                    # _funcReg_3 = re.search(r'^\s*function\s+[0-9a-zA-Z_]+\s*\.\s*[0-9a-zA-Z_]+\((.*)\)\s*', _line)
+                    _funcReg_3 = re.search(r'^function\s+[0-9a-zA-Z_]+\s*\.\s*[0-9a-zA-Z_]+\((.*)\)\s*', _line)
+                    if _funcReg_3:
+                        _isInFunction = _j
+                        # _funcReg_3_end = re.search(r'^\s*function\s+[0-9a-zA-Z_]+\s*\.\s*[0-9a-zA-Z_]+\((.*)\)\s*(.*)end\s*', _line)
+                        _funcReg_3_end = re.search(r'^function\s+[0-9a-zA-Z_]+\s*\.\s*[0-9a-zA-Z_]+\((.*)\)\s*(.*)end\s*', _line)
+                        # 当前行开始当前行结束
+                        if _funcReg_3_end:
+                            _isInFunction = 0
+
+                    # local a function(c) 忽略
 
 
 
 
         _luaCodeStr = string.join(_luaCodes, "")
-        FileReadWrite.writeFileWithStr(_luaPath, _luaCodeStr)
+        # FileReadWrite.writeFileWithStr(_luaPath, _luaCodeStr)
