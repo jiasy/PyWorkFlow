@@ -29,7 +29,8 @@ import SysCmd
 
 # 修改所需属性
 opsDict = {}
-opsDict["targetFolder"] = '合并目标文件夹'
+opsDict["targetFolder"] = '要合并的目标文件夹，结构满足 plist + png + png文件夹'
+opsDict["backIntoFolder"] = "合并结束后，放回工程中"
 
 # 合并大图
 #   文件夹里有 xx.plist + xx.png 找到对应的 xx 文件夹 
@@ -68,4 +69,6 @@ if __name__ == '__main__':
 			SysCmd.doShell(_cmd)
 			# 移除碎图文件夹
 			shutil.rmtree(SysInfo.fixFolderPath(_foldPath))
+	# 拷贝合并后的资源拷贝回工程
+	FileCopy.copy_files_with_config_base(["png","plist"],_ops.targetFolder,_ops.backIntoFolder,False)
 	print "PngToPlst ---------- 合并结束 ---------- "

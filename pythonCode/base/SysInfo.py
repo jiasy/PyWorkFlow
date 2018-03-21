@@ -20,6 +20,13 @@ from biplist import *
 from optparse import OptionParser
 from FileReadWrite import dictFromJsonFile
 
+# 获取 subFolderPath_ 相对于 folderPath_ 的路径，去掉后缀
+def getRelativePathWithOutSuffix(folderPath_,subFolderPath_,suffix_):
+	return str(subFolderPath_).split(folderPath_)[1].split(suffix_)[0]
+
+# 获取 subFolderPath_ 相对于 folderPath_ 的路径
+def getRelativePath(folderPath_,subFolderPath_):
+	return str(subFolderPath_).split(folderPath_)[1]
 
 # 获取校验参数
 def getOps(opsDict_,parse_):
@@ -102,6 +109,7 @@ def add_path_prefix(path_str):
 	if path_str.startswith("\\\\?\\"):
 		return path_str
 	ret = "\\\\?\\" + os.path.abspath(path_str)
+	ret = ret.replace("//", "/")
 	ret = ret.replace("/", "\\")
 	return ret
 

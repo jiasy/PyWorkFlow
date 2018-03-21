@@ -29,28 +29,36 @@ import SysCmd
 
 # 修改所需属性
 opsDict = {}
-opsDict["targetFolder"] = '导出目标文件夹'
+opsDict["sourceFolder"] = '图片资源文件路径'
+opsDict["putInToFolder"] = 'plist图片拷贝出来之后放置的路径'
 
 # 拆分小图
-#   targetFolder 里找出 plist 的大图。
-#   xx.plist 大图 -> xx 这样的文件夹，将图片拆分到这个文件夹里。
+#   sourceFolder 里找出 plist 的大图。
+#   同路径结构 拷贝 到 putInToFolder 文件夹中。
+#   putInToFolder 中 xx.plist 大图 拆分成 xx 这样的文件夹，将图片拆分到这个文件夹里。
 # ------------------------------------测试用例---------------------------------------------------------------------------------------
 if __name__ == '__main__':
 	_ops = SysInfo.getOps(opsDict,OptionParser())
 	_currentFolder = SysInfo.fixFolderPath(os.path.dirname(os.path.realpath(__file__)))
-
 	# 切分脚本位置
-	_slicePyFilePath = _currentFolder + "unpack/unpacker.py"
+	_slicePyFilePath = os.path.join(_currentFolder,"unpack/unpacker.py")
 	# plist 路径集
-	_plistPathList = FileReadWrite.getFilePathsByType(_ops.targetFolder,"plist")
+	_plistPathList = FileReadWrite.getFilePathsByType(_ops.sourceFolder,"plist")
 	for _i in range(len(_plistPathList)):
 		_plistPath = _plistPathList[_i]
 		#有同名的文件就是大图用的plist
 		_pngPath = SysInfo.getPathWithOutPostfix(_plistPath)+ ".png"
 		if os.path.exists(_pngPath):
-			_cmdPath = os.path.dirname(_pngPath)# 执行脚本路径，大图所在的路径
+			# 拷贝到新路径下
+			SysInfo.filTransformWithFolderStructure(_plistPath,_ops.sourceFolder,_ops.putInToFolder)
+			SysInfo.filTransformWithFolderStructure(_pngPath,_ops.sourceFolder,_ops.putInToFolder)
+			# 执行脚本路径，大图所在的路径
+			_cmdPath = os.path.dirname(_pngPath)
 			_bigPicNameWithOutPostfix =  SysInfo.justName(_pngPath)# 纯名
 			_cmd = "cd "+_cmdPath+";" + "python "+_slicePyFilePath +" "+_bigPicNameWithOutPostfix
 			print "_cmd = " + str(_cmd)
 			SysCmd.doShell(_cmd);
 	print "PngToPlst ---------- 拆分结束 ---------- "
+
+
+
