@@ -133,7 +133,9 @@ if __name__ == '__main__':
 
         # 方法的信息，自己的缩进，自己的名称
         _funcDict = {}
+        # 方法名
         _funcDict["name"] = ""
+        # 代码缩进相关
         _funcDict["spaceStr"] = None
         # 每一行
         for _j in range(len(_pyCodes)):

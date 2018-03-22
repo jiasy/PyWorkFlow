@@ -81,7 +81,7 @@ def getCmdStr(val_):
 # 获取参数
 # 空格 转换回 <_>
 def setCmdStr(val_):
-	return val_.replace('(', '\(').replace(')', '\)').replace(' ', '<_>').replace('<', '\<').replace('>', '\>').replace('\"', '\\"')
+	return val_.replace('\\', '\\\\').replace('(', '\(').replace(')', '\)').replace(' ', '<_>').replace('<', '\<').replace('>', '\>').replace('\"', '\\"')
 
 # 上层路径
 def getParentPath(path_):
