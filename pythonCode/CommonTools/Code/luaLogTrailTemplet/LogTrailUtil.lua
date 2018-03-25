@@ -1,7 +1,7 @@
 
 local logTrailUtil = class("logTrailUtil")
 function logTrailUtil:ctor(params_)
-	self.functionStack = []
+	self.functionStack = {}
 	self.interStr = "|   "
 	self.passCount = 0
 end
@@ -35,7 +35,7 @@ function logTrailUtil:fi(path_, functionName_, comment_, pass_, par_)
         	comment_ = ""
         end
 
-        print "->" .. _tempStr .. "  :  " .. comment_ .. " " .. par_
+        print ("->" .. _tempStr .. "  :  " .. comment_ .. " " .. par_)
     else
         print "ERROR -------------------------------passCount - fi "
     end
@@ -77,14 +77,14 @@ function logTrailUtil:fo(path_, funcName_, comment_, pass_, par_)
                 end
 
                 if par_ then
-                	print "<-" .. _tempStr .. "  :  " .. comment_ + " " .. par_
+                	print ("<-" .. _tempStr .. "  :  " .. comment_ + " " .. par_)
                 else
-                	print "<-" .. _tempStr .. "  :  " .. comment_ 
+                	print ("<-" .. _tempStr .. "  :  " .. comment_)
                 end
             else
                 print "ERROR -------------------------------"
-                print "now  : " .. _nowFunStr
-                print "last : " .. _lastFunStr
+                print ("now  : " .. _nowFunStr)
+                print ("last : " .. _lastFunStr)
             end
         else
         	print "ERROR -------------------------------passCount - fo "

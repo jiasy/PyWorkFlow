@@ -69,11 +69,18 @@ def folderBackUp(folderPath_):
             # 将备份 同步给 源
             shutil.copytree(_backUpPath, folderPath_)
             print "备份文件，拷贝回源路径"
+        else:
+            # 有源，这里的源，也是备份之后的，所以，可以用备份覆盖回去
+            shutil.rmtree(folderPath_)
+            shutil.copytree(_backUpPath, folderPath_)
+            # 标记已经备份过了
+            writeFileWithStr(folderPath_ + '/backup_created', 'backup end')
+            print "删除原路径，将备份还原回去"
+
         # 源里没有 创建备份的标示。
         if not os.path.isfile(folderPath_ + '/backup_created'):
             # 删除 原有备份
             shutil.rmtree(_backUpPath)
-            # 新备份
             shutil.copytree(folderPath_, _backUpPath)
             # 标记已经备份过了
             writeFileWithStr(folderPath_ + '/backup_created', 'backup end')
