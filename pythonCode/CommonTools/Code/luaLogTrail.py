@@ -296,7 +296,7 @@ if __name__ == '__main__':
                     _blockDict["type"] = "func"
                     _codeBlockStack.append(_blockDict)
                     _funcStack.append(_currentFuncDict)
-                    _line = _line + "-- --> " + str(_currentFuncDict["name"]) + '\n' + getLogIn(_shortPath, _currentFuncDict["name"], " Λ ", ((_shortPath + _filterClassFuncJoin + _currentFuncDict["name"]) in _filterPrints), "")
+                    _line = _line + "-- --> " + str(_currentFuncDict["name"]) + '\n' + getLogIn(_shortPath, _currentFuncDict["name"], " Λ ", ((_shortPath + _filterClassFuncJoin + _currentFuncDict["name"]) in _filterPrints), "")+'\n'
                     _luaCodes[_j] = _line
                 else:
                     # 走到这里可能就是一个 匿名方法 anonymousFunc
@@ -335,7 +335,9 @@ if __name__ == '__main__':
                 _controlKeyWord = ['if', "while", "for"]
                 for _k in range(len(_controlKeyWord)):
                     _keyWord = re.search("^(\s*)" + _controlKeyWord[_k] + "(\s+)", _line)
-                    if _keyWord:
+                    _keyWordEnd1 = re.search("^(\s*)" + _controlKeyWord[_k] + "(.*)\s+end\s*$", _line)
+                    _keyWordEnd2 = re.search("^(\s*)" + _controlKeyWord[_k] + "(.*)\s+end\s*\)\s*", _line)
+                    if _keyWord and (not _keyWordEnd1) and (not _keyWordEnd2):
                         if _haveControlBoo:
                             print "ERROR 同一行 有两个 流程控制 关键字，请修改代码。不符合规范"
                             sys.exit(1)
@@ -346,11 +348,16 @@ if __name__ == '__main__':
                         _haveControlBoo = True
                         # print " --> " + str(_blockDict["type"])
                         _luaCodes[_j] = _line + "-- --> " + str(_blockDict["type"]) + '\n'
+
+                    if _keyWordEnd1 or _keyWordEnd2:
+                        _haveControlBoo = True
 
                 _controlKeyWord = ['if\(', "while\(", "for\("]
                 for _k in range(len(_controlKeyWord)):
                     _keyWord = re.search("^(\s*)" + _controlKeyWord[_k] + "(.*)", _line)
-                    if _keyWord:
+                    _keyWordEnd1 = re.search("^(\s*)" + _controlKeyWord[_k] + "(.*)\s+end\s*$", _line)
+                    _keyWordEnd2 = re.search("^(\s*)" + _controlKeyWord[_k] + "(.*)\s+end\s*\)\s*", _line)
+                    if _keyWord and (not _keyWordEnd1) and (not _keyWordEnd2):
                         if _haveControlBoo:
                             print "ERROR 同一行 有两个 流程控制 关键字，请修改代码。不符合规范"
                             sys.exit(1)
@@ -362,6 +369,9 @@ if __name__ == '__main__':
                         # print " --> " + str(_blockDict["type"])
                         _luaCodes[_j] = _line + "-- --> " + str(_blockDict["type"]) + '\n'
 
+                    if _keyWordEnd1 or _keyWordEnd2:
+                        _haveControlBoo = True
+                        
                 if not _haveControlBoo:
                     _endReg = re.search("^\s*end\s*$", _line)
                     _endReg1 = re.search("^\s*end\s*\)\s*", _line)
@@ -388,7 +398,7 @@ if __name__ == '__main__':
                             pass
                     else:
                         _returnReg = re.search("\s*return\s*(.*)", _line)
-                        if _returnReg and _currentFuncDict:
+                        if _returnReg and _currentFuncDict and (not _haveControlBoo):
                             _line = getLogOut(_shortPath, _currentFuncDict["name"], " V ", ((_shortPath + _filterClassFuncJoin + _currentFuncDict["name"]) in _filterPrints), "") + '\n' + _line
                             _luaCodes[_j] = _line
 
