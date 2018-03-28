@@ -4,6 +4,8 @@ function LogUtil:new(o_)
     setmetatable(o_, self)
     self.__index = self
     self.functionStack = {}
+    -- 给一个容错空间
+    table.insert(self.functionStack, "Main")
     self.interStr = "|   "
     self.passCount = 0
     return o_
@@ -121,6 +123,7 @@ function LogUtil:parCut(par_)
 end
 
 function LogUtil:fi(path_, functionName_, comment_, pass_, par_)
+    local _nowFunStr = path_ .. " -> " .. functionName_
     if pass_ == true then
         self.passCount = self.passCount + 1
     end
@@ -132,8 +135,7 @@ function LogUtil:fi(path_, functionName_, comment_, pass_, par_)
         -- 记录这个方法执行时的相关信息
         local _tempTable = {}
         -- 组合成唯一函数路径
-        _tempTable["uniquePath"] = path_ .. " -> " .. functionName_
-        table.insert(self.functionStack, _tempTable)
+        table.insert(self.functionStack, _nowFunStr)
 
         -- 层级字符串
         local _tempStr = ""
@@ -142,14 +144,13 @@ function LogUtil:fi(path_, functionName_, comment_, pass_, par_)
         end
 
         -- 层级叠加得到当前的方法执行字符串
-        _tempStr = _tempStr .. path_ .. " -> " .. functionName_
+        _tempStr = _tempStr .. _nowFunStr
 
         -- 显示LOG
         if comment_ == nil then
             comment_ = ""
         end
-        -- print ("Λ" .. _tempStr .. "  :  " .. tostring(comment_) .. " " .. par_)
-        print("Λ" .. _tempStr .. "  :  " .. par_)
+        print("Λ" .. _tempStr .. "  =>  " .. par_)
     else
         print "ERROR -------------------------------passCount - fi "
     end
@@ -160,6 +161,7 @@ function LogUtil:fo(path_, functionName_, comment_, pass_, par_)
     local _nowFunStr = path_ .. " -> " .. functionName_
 
     if #self.functionStack == 0 then
+        print("ERROR 意外的函数堆栈为空")
         return
     end
 
@@ -178,10 +180,7 @@ function LogUtil:fo(path_, functionName_, comment_, pass_, par_)
         end
 
         -- 获取堆栈的最后一个 -- 不论后面对不对,都推出最后一个
-        local _tempTable = table.remove(self.functionStack, #self.functionStack)
-
-        -- 最后一个Function组合名
-        local _lastFunStr = _tempTable["uniquePath"]
+        local _lastFunStr = table.remove(self.functionStack, #self.functionStack)
 
         -- 组合成唯一函数路径，进出应当是一一对应的，如果没对应上就出错了
         if _nowFunStr == _lastFunStr then
@@ -191,15 +190,13 @@ function LogUtil:fo(path_, functionName_, comment_, pass_, par_)
             end
 
             if par_ then
-                -- print ("V" .. _tempStr .. "  :  " .. tostring(comment_) + " " .. par_)
-                print("V" .. _tempStr .. "  :  " .. par_)
+                print("V" .. _tempStr .. "  <=  " .. par_)
             else
-                -- print ("V" .. _tempStr .. "  :  " .. tostring(comment_))
-                print("V" .. _tempStr .. "  :  ")
+                print("V" .. _tempStr .. "  <=  ")
             end
         else
-            print "ERROR -------------------------------"
-            print("now  : " .. _nowFunStr)
+            print "ERROR -------------------------------------------------------"
+            print("now  检查这个函数的写法，有逻辑没有闭合 : " .. _nowFunStr)
             print("last : " .. _lastFunStr)
         end
     else

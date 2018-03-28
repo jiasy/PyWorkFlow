@@ -67,14 +67,14 @@ def check_filterPrints(filePath_, filterPrints_):
     return (filePath_ in filterPrints_)
 
 
-def getCodeBlockInfo(regBegin_, regEndInCurrentLine_, line_):
+def getCodeBlockInfo(regBegin_, reEnds_, line_):
     _funcReg = re.search(regBegin_, line_)
     if _funcReg:
-        _funcReg_end = re.search(regEndInCurrentLine_, line_)
-        if _funcReg_end:  # 当前行开始当前行结束
-            return _funcReg, True
-        else:
-            return _funcReg, False
+        for _i in range(len(reEnds_)):
+            _funcReg_end = re.search(regBegin_ + reEnds_[_i], line_)
+            if _funcReg_end:  # 当前行开始当前行结束
+                return _funcReg, True
+        return _funcReg, False
     else:
         return None, False
 
@@ -88,7 +88,6 @@ if __name__ == '__main__':
     # 获取 工具类 位置
     _luaUtilPath = _ops.logToolPath
     _requireStr = _ops.logImportCode
-
 
     _regFilters = _ops.regFilters.split(",")
 
@@ -252,7 +251,7 @@ if __name__ == '__main__':
             _isFunction = True
             if _funcReg and (not _commentFuncReg1) and (not _commentFuncReg2):
                 # 满足正则之后，判断这个方法是不是在当前行就结束
-                _funcRegStrToEnd = r'(.*)\s+end\s*'
+                _funcRegStrToEnds = [r'(.*)\s+end\s*', r'(.*);\s*end\s*']
                 # 当前行 满足一个方法的正则，这里是有方法名的方法，匿名函数在后面
                 _regList = [
                     # a.b = function(c)
@@ -276,7 +275,7 @@ if __name__ == '__main__':
                 for _idx in range(len(_regList)):
                     _regItem = _regList[_idx]
                     # 判断满不满足，是不是满足了且当前行就结束了
-                    _isCodeBlockInfo, _endInOneLine = getCodeBlockInfo(_regItem, _regItem + _funcRegStrToEnd, _line)
+                    _isCodeBlockInfo, _endInOneLine = getCodeBlockInfo(_regItem, _funcRegStrToEnds, _line)
                     # 当前行自己结束
                     if _isCodeBlockInfo and _endInOneLine:
                         _endCurrentLineCheck = True
@@ -318,13 +317,10 @@ if __name__ == '__main__':
                                 _parList.append(_par)
                     _parStr = ""
                     if str(_tempFuncDict["name"]).strip() != "" and len(_parList) > 0:
-                        # print "_tempFuncDict[\"name\"] = " + str(_tempFuncDict["name"])
-                        # print "_tempFuncDict[\"parameters\"] = " + str(_parList)
                         for _k in range(len(_parList)):
                             _parStr = _parStr + '"' + _parList[_k] + '="..LogUtil:getInstance():parCut(' + _parList[_k] + ')'
                             if not (_k == (len(_parList) - 1)):
                                 _parStr = _parStr + '.." ,"..'
-                        # print _parStr
                     else:
                         _parStr = '""'
 
@@ -332,6 +328,8 @@ if __name__ == '__main__':
                     _allPath = (_shortPath + _filterClassFuncJoin + _currentFuncDict["name"])
                     _currentFuncDict["allPath"] = _allPath
                     _currentFuncDict["fiterPrintBoo"] = (_allPath in _filterPrints)
+                    if _currentFuncDict["fiterPrintBoo"]:
+                        print "_currentFuncDict[\"name\"] = " + str(_currentFuncDict["name"])
                     if _currentFuncDict["name"] == "":  # 匿名函数直接过滤
                         _currentFuncDict["fiterPrintBoo"] = True
                     # 当前的方法还没有return过
