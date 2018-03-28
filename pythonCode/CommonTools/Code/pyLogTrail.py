@@ -38,12 +38,6 @@ opsDict["targetFolderPath"] = 'py所在的文件夹'
 opsDict["filterLogs"] = '需要过滤掉的Log'
 
 
-
-def replace_chars(match):
-    char = match.group(0)
-    return chars[char]
-
-
 def getLogOut(path_, funcName_, comment_, pass_, par_):
     _passStr = "True"
     if pass_ == False:
@@ -76,32 +70,6 @@ if __name__ == '__main__':
     _blockPrint = True
     # 是否不进行log添加
     _addLog = True
-
-    # 移除掉一些麻烦的字符串
-    chars = {
-        '\xc2\x82': ',',  # High code comma
-        '\xc2\x84': ',,',  # High code double comma
-        '\xc2\x85': '...',  # Tripple dot
-        '\xc2\x88': '^',  # High carat
-        '\xc2\x91': '\x27',  # Forward single quote
-        '\xc2\x92': '\x27',  # Reverse single quote
-        '\xc2\x93': '\x22',  # Forward double quote
-        '\xc2\x94': '\x22',  # Reverse double quote
-        '\xc2\x95': ' ',
-        '\xc2\x96': '-',  # High hyphen
-        '\xc2\x97': '--',  # Double hyphen
-        '\xc2\x99': ' ',
-        '\xc2\xa0': ' ',
-        '\xc2\xa6': '|',  # Split vertical bar
-        '\xc2\xab': '<<',  # Double less than
-        '\xc2\xbb': '>>',  # Double greater than
-        '\xc2\xbc': '1/4',  # one quarter
-        '\xc2\xbd': '1/2',  # one half
-        '\xc2\xbe': '3/4',  # three quarters
-        '\xca\xbf': '\x27',  # c-single quote
-        '\xcc\xa8': '',  # modifier - under curve
-        '\xcc\xb1': ''  # modifier - under line
-    }
 
     # 创建代码备份
     FileCopy.folderBackUp(_ops.targetFolderPath)
@@ -339,7 +307,6 @@ if __name__ == '__main__':
         _pyCodes.insert(0, "#!/usr/bin/python\n")
         _pyCodeStr = string.join(_pyCodes, "")
 
-        # 去除一些特殊字符
-        _pyCodeStr = re.sub('(' + '|'.join(chars.keys()) + ')', replace_chars, _pyCodeStr)
+        _pyCodeStr = CommonUtils.removeAnnoyingChars(_pyCodeStr)
 
         FileReadWrite.writeFileWithStr(_pyPath, _pyCodeStr)

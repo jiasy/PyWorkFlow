@@ -9,3 +9,4 @@ excel/_work_*
 ~$IconDuplicate.xlsx
 .idea
 ~$luaLogTrail.xlsx
+LogTrailUtilTest.lua
