@@ -41,6 +41,8 @@ opsDict["filterLogs"] = '需要过滤掉的Log'
 opsDict["filterFiles"] = '需要过滤掉的File'
 # 过滤 reg 文件
 opsDict["regFilters"] = '满足正则表达式的行，过滤掉'
+opsDict["logToolPath"] = 'lua工具的路径'
+opsDict["logImportCode"] = 'lua工具的引用的代码'
 
 
 def getLogOut(path_, funcName_, comment_, pass_, par_):
@@ -82,15 +84,13 @@ def getCodeBlockInfo(regBegin_, regEndInCurrentLine_, line_):
 if __name__ == '__main__':
     _ops = SysInfo.getOps(opsDict, OptionParser())
     _currentFolder = SysInfo.fixFolderPath(os.path.dirname(os.path.realpath(__file__)))
+
     # 获取 工具类 位置
-    _luaUtilPath = os.path.join(_currentFolder, "luaLogTrailTemplet/LogTrailUtil.lua")
-    _luaUtilRelativePath = 'LogTrailUtil.lua'
-    _requireStr = 'local LogUtil = require("app.LogTrailUtil")'
+    _luaUtilPath = _ops.logToolPath
+    _requireStr = _ops.logImportCode
+
 
     _regFilters = _ops.regFilters.split(",")
-    # for _i in range(len(_regFilters)):
-    #     _item = _regFilters[_i]
-    #     print "_item = " + str(_item)
 
     # 后缀
     _codeSuffix = ".lua"
@@ -104,13 +104,6 @@ if __name__ == '__main__':
     _filterLogsList = _ops.filterLogs.split(",")
     _filterLogsDict = CommonUtils.strToListDict(_ops.filterLogs, _codeSuffix)
     _filterPrints = CommonUtils.listDictToList(_filterLogsDict, _filterClassFuncJoin)
-    # print "_ops.filterLogs = " + str(_ops.filterLogs)
-    # print "_filterLogsDict = " + str(_filterLogsDict)
-    # print "_filterPrints = " + str(_filterPrints)
-    # for _i in range(len(_filterPrints)):
-    #     _item = _filterPrints[_i]
-    #     print "_item = " + str(_item)
-    # sys.exit(1)
 
     # 获取过滤的文件
     _filterFilesList = list(_ops.filterFiles.split(","))

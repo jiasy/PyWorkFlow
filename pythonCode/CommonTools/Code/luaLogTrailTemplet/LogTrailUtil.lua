@@ -16,12 +16,86 @@ function LogUtil:getInstance()
     return self._instance
 end
 
+function LogUtil:serialize(obj_)
+    local _lua = ""
+    local _type = type(obj_)
+    if _type == "number" then
+        _lua = _lua .. obj_
+    elseif _type == "boolean" then
+        _lua = _lua .. tostring(obj_)
+    elseif _type == "string" then
+        _lua = _lua .. string.format("%q", obj_)
+    elseif _type == "table" then
+        _lua = _lua .. "{"
+        for _k, _v in pairs(obj_) do
+            _lua = _lua .. "[" .. self:serialize(_k) .. "]=" .. self:serialize(_v) .. ","
+        end
+        local metatable = getmetatable(obj_)
+        if metatable ~= nil and type(metatable.__index) == "table" then
+            for _k, _v in pairs(metatable.__index) do
+                _lua = _lua .. "[" .. self:serialize(_k) .. "]=" .. self:serialize(_v) .. ","
+            end
+        end
+        _lua = _lua .. "}"
+    elseif _type == "nil" then
+        return nil
+    else
+        error("can not serialize a " .. _type .. " type.")
+    end
+    return _lua
+end
+
+function LogUtil:unserialize(lua_)
+    local _type = type(lua_)
+    if _type == "nil" or lua_ == "" then
+        return nil
+    elseif _type == "number" or _type == "string" or _type == "boolean" then
+        lua_ = tostring(lua_)
+    else
+        error("can not unserialize a " .. _type .. " type.")
+    end
+    lua_ = "return " .. lua_
+    local _func = loadstring(lua_)
+    if _func == nil then
+        return nil
+    end
+    return _func()
+end
+
+-- 输出 字符串、数字、boolean、空值 ，其他过滤
+function LogUtil:getTableStr(table_,level_)
+    -- 不能一直递归下去，所以就解释几个层级，否者容易堆栈溢出
+    if level_<=0 then
+        return nil
+    end
+    local _tableStr = ""
+    local _parList = {}
+    for _key, _value in pairs(table_) do
+        if type(_value) == "string" or type(_value) == "number" or type(_value) == "boolean" or _value == nil then
+            table.insert(_parList, _key .. ":" .. tostring(_value))
+        elseif type(_value)=="table" then
+            local _nextLevelTable =  self:getTableStr(_value,level_-1)
+            if _nextLevelTable then
+                table.insert(_parList, _key .. ":" .._nextLevelTable)
+            end
+        end
+    end
+    _tableStr = "{"
+    for i=1 , #_parList do
+        _tableStr = _tableStr .._parList[i]
+        if i ~= #_parList then
+            _tableStr = _tableStr ..","
+        end
+    end
+    _tableStr = _tableStr .."}"
+    return _tableStr
+end
+
 function LogUtil:parCut(par_)
     local _par = tostring(par_)
-
     local _start, _len = string.find(_par, 'table: 0x')
     if _start == 1 then
-        _par = "table"
+        _par = self:getTableStr(par_,2)
     else
         _start, _len = string.find(_par, 'function: 0x')
         if _start == 1 then
