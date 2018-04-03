@@ -41,39 +41,41 @@ opsDict["publish"] = '端口映射列表'
 opsDict["volume"] = '共享磁盘路径列表'
 opsDict["link"] = '链接容器列表'
 opsDict["env"] = '环境变量'
+# 可选项包括,可选项可以不填写
+opsDict["__option__"] = ["env","link","volume","publish","restart","privileged","hostname"]
 
 # 只映射部分端口
 if __name__ == '__main__':
     _ops = SysInfo.getOps(opsDict, OptionParser())
     _currentFolder = SysInfo.fixFolderPath(os.path.dirname(os.path.realpath(__file__)))
     # 拼接端口号
-    _publishListStr = CommonUtils.getParameterListStr("publish",_ops.publish,False)
+    _publishListStr = CommonUtils.getParameterListStr("publish", _ops.publish, False)
     # 拼接外挂磁盘
-    _volumeListStr = CommonUtils.getParameterListStr("volume", _ops.volume,False)
+    _volumeListStr = CommonUtils.getParameterListStr("volume", _ops.volume, False)
     # 拼接容器链接
-    _linkListStr = CommonUtils.getParameterListStr("link", _ops.link,False)
+    _linkListStr = CommonUtils.getParameterListStr("link", _ops.link, False)
     # 拼接环境变量
-    _envListStr = CommonUtils.getParameterListStr("env", _ops.env,True)
+    _envListStr = CommonUtils.getParameterListStr("env", _ops.env, True)
     # 是否最大 权限
-    _privileged = CommonUtils.getParameterStr("privileged",_ops.privileged,False)
+    _privileged = CommonUtils.getParameterStr("privileged", _ops.privileged, False)
     # 主机容器映射关系
-    _hostname = CommonUtils.getParameterStr("hostname",_ops.hostname,True)
+    _hostname = CommonUtils.getParameterStr("hostname", _ops.hostname, True)
     # 重启模式
-    _restart = CommonUtils.getParameterStr("restart",_ops.restart,False)
+    _restart = CommonUtils.getParameterStr("restart", _ops.restart, False)
     # 容器名
-    _name = CommonUtils.getParameterStr("name",_ops.name,False)
+    _name = CommonUtils.getParameterStr("name", _ops.name, False)
 
     _cmd = '\
-docker run -d '+'\
-'+ _name + ' \
-'+ _privileged + ' \
-'+ _hostname + ' \
-'+ _restart + ' \
-'+ _publishListStr + ' \
-'+ _volumeListStr + ' \
-'+ _linkListStr + ' \
-'+ _envListStr + ' \
-'+ _ops.imageNameAndVersion + ' \
+docker run -d ' + '\
+' + _name + ' \
+' + _privileged + ' \
+' + _hostname + ' \
+' + _restart + ' \
+' + _publishListStr + ' \
+' + _volumeListStr + ' \
+' + _linkListStr + ' \
+' + _envListStr + ' \
+' + _ops.imageNameAndVersion + ' \
 '
 
     print str(_cmd)

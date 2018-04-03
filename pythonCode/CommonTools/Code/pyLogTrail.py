@@ -77,7 +77,7 @@ if __name__ == '__main__':
     # 获取过滤字典
     _filterLogsList = _ops.filterLogs.split(",")
     _filterLogsDict = CommonUtils.strToListDict(_ops.filterLogs, _codeSuffix)
-    _filterPrints = CommonUtils.listDictToList(_filterLogsDict,_filterClassFuncJoin)
+    _filterPrints = CommonUtils.listDictToList(_filterLogsDict, _filterClassFuncJoin)
 
     # 过滤文件后缀
     _fileFilter = [_codeSuffix]
@@ -92,7 +92,7 @@ if __name__ == '__main__':
 
     for _i in range(len(_fileList)):
         _pyPath = _fileList[_i]
-        _shortPath = SysInfo.getRelativePathWithOutSuffix(_ops.targetFolderPath,_pyPath,_codeSuffix)
+        _shortPath = SysInfo.getRelativePathWithOutSuffix(_ops.targetFolderPath, _pyPath, _codeSuffix)
         print _shortPath
         _pyCodes = FileReadWrite.linesFromFile(_pyPath)
 

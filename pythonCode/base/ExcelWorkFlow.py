@@ -193,6 +193,9 @@ if __name__ == '__main__':
         if _op == "-e":
             _excelFile = _value
 
+    if not os.path.exists(_excelFile):
+        print "ERROR excel 文件不存在 : "+_excelFile
+        sys.exit(1)
     _excelWorkBook = ExcelUtils.WorkBook()
     _excelWorkBook.initWithWorkBook(_excelFile)
     for _key in _excelWorkBook.sheetDict:

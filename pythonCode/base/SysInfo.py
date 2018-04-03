@@ -51,8 +51,18 @@ def getOps(opsDict_, parse_):
 
     # 解析每一个参数
     for _key in opsDict_:
+        # 可选项的话，就忽略，进行下一个
+        if _key == "__option__":
+            continue
+        # 输出参数中没有这个key
         if not _ops.__dict__[_key]:
-            print "WARNING : <" + _key + ":" + opsDict_[_key] + "> 空参数"
+            # 如果编辑了可选项，那么可选项内的参数缺失，只提示，不报错
+            if "__option__" in opsDict_ and _key in opsDict_["__option__"]:
+                print "WARNING : <" + _key + ":" + opsDict_[_key] + "> 空参数"
+            else:
+                # 如果不在可选项中，那么就报错，停止进程
+                print "ERROR : 必须有 " + _key + " -> " + opsDict_[_key]
+                sys.exit(1)
         else:
             # 当参数是 jenkins.xx 的时候，代表从jenkins的共享参数中取数据
             _ops.__dict__[_key] = getCmdStr(_ops.__dict__[_key])

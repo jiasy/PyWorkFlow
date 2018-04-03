@@ -11,3 +11,4 @@ excel/_work_*
 ~$luaLogTrail.xlsx
 LogTrailUtilTest.lua
 ~$baseDockerContainer.xlsx
+~$rsyncFile.xlsx

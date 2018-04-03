@@ -27,29 +27,30 @@ from SysInfo import getParentPath
 from SysInfo import getBaseName
 from FileReadWrite import writeFileWithStr
 
+
 # 单一文件，按照相对文件路径平移
-def filTransformWithFolderStructure(sourceFilePath_,sourceMainFolderPath_,targetMainFolderPath_):
+def filTransformWithFolderStructure(sourceFilePath_, sourceMainFolderPath_, targetMainFolderPath_):
     sourceMainFolderPath_ = SysInfo.add_path_prefix(sourceMainFolderPath_)
     targetMainFolderPath_ = SysInfo.add_path_prefix(targetMainFolderPath_)
     # 相对路径
-    _relativeFolderPath = getRelativePath(sourceMainFolderPath_,sourceFilePath_)
+    _relativeFolderPath = getRelativePath(sourceMainFolderPath_, sourceFilePath_)
     _fileName = None
     # 不是一个文件夹，就取得它的上一级文件夹路径
     if not os.path.isdir(_relativeFolderPath):
         _fileName = os.path.basename(_relativeFolderPath)
         _relativeFolderPath = os.path.dirname(_relativeFolderPath)
-        
+
     # 平移结构后的文件夹目录结构
-    _targetFolderPath = SysInfo.add_path_prefix((targetMainFolderPath_+_relativeFolderPath).replace('//','/'))
-    
+    _targetFolderPath = SysInfo.add_path_prefix((targetMainFolderPath_ + _relativeFolderPath).replace('//', '/'))
+
     # 路径不存在的话，就创建这个路径
     if not os.path.exists(_targetFolderPath):
         os.makedirs(_targetFolderPath)
     # 如果是一个文件的话，进行实际的拷贝
     if _fileName:
         _sourceFilePath = sourceFilePath_
-        _targetFilePath = os.path.join(_targetFolderPath,_fileName)
-        shutil.copy(_sourceFilePath,_targetFilePath)
+        _targetFilePath = os.path.join(_targetFolderPath, _fileName)
+        shutil.copy(_sourceFilePath, _targetFilePath)
         # 返回拷贝后的路径
         return _targetFilePath
     else:

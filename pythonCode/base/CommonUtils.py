@@ -108,37 +108,33 @@ def listDictToList(targetDict_, split_):
             backList.append(_key + split_ + _valueList[_i])
     return backList
 
+
 # 将 逗号分割的字符串 加工成 参数输出,最后一个参数判断它是不是需要“'”包裹
 # 将 --env DB_NAME=gitlabhq_production,DB_USER=gitlab
 # 转换成--env='DB_NAME=gitlabhq_production' --env='DB_USER=gitlab'
 # CommonUtils.getParameterListStr("env","DB_NAME=gitlabhq_production,DB_USER=gitlab",True)
-def getParameterListStr(prefix_, listStr_,isStringBoo):
+def getParameterListStr(prefix_, listStr_, isStringBoo):
     if listStr_ == None or str(listStr_).strip() == "":
         return ""
     else:
         _strList = listStr_.split(",")
         _returnStr = ""
         for _i in range(len(_strList)):
-            _returnStr += getParameterStr(prefix_,_strList[_i],isStringBoo)
+            _returnStr += getParameterStr(prefix_, _strList[_i], isStringBoo)
         return _returnStr
+
 
 # 将输入参数加工成命令行参数。
 # 将 --prefix_ str_[需要引号包裹 isStringBoo = true]
 # 转换成--prefix_='str_'
 # CommonUtils.getParameterListStr("prefix_","str_",True)
-def getParameterStr(prefix_,str_,isStringBoo):
+def getParameterStr(prefix_, str_, isStringBoo):
     if str_ == None or str(str_).strip() == "":
         return ""
     else:
         _returnStr = ""
         if isStringBoo:
-            _returnStr = '--'+prefix_ + '=\'' + str_+'\' '
+            _returnStr = '--' + prefix_ + '=\'' + str_ + '\' '
         else:
-            _returnStr = '--'+prefix_ + '=' + str_ + ' '
+            _returnStr = '--' + prefix_ + '=' + str_ + ' '
         return _returnStr
-
-
-
-
-
-
