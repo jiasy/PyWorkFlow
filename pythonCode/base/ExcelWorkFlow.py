@@ -96,6 +96,7 @@ def getConfigFromSheet(targetSheet_):
                         _parameterObject["key"] = _currentRowKey
                         # 下一行
                         _nextLoopRow = _currentLoopRow + 1
+                        # 数组最后会加工成 ',' 分割的字符串。
                         if _nextLoopRow < targetSheet_.maxRow:
                             _loopRowKey = targetSheet_.getStrByCr(2, _nextLoopRow)
                             _loopRowValue = targetSheet_.getStrByCr(3, _nextLoopRow)
@@ -103,7 +104,7 @@ def getConfigFromSheet(targetSheet_):
                             if _loopRowKey == "" and _loopRowValue != "":
                                 # 是数组创建数组
                                 _parameterObject["val"] = [_currentRowValue]
-                                _parameterObject["val"].append(targetSheet_.getStrByCr(3, _nextLoopRow))
+                                _parameterObject["val"].append(checkStrForList(targetSheet_.getStrByCr(3, _nextLoopRow)))
                                 while (True):
                                     _nextLoopRow = _nextLoopRow + 1
                                     if _nextLoopRow >= targetSheet_.maxRow:
@@ -112,7 +113,7 @@ def getConfigFromSheet(targetSheet_):
                                         break
                                     else:
                                         _loopRowKey = targetSheet_.getStrByCr(2, _nextLoopRow)
-                                        _loopRowValue = targetSheet_.getStrByCr(3, _nextLoopRow)
+                                        _loopRowValue = checkStrForList(targetSheet_.getStrByCr(3, _nextLoopRow))
                                         # 当前行，没有键，那么值就是数组的一个元素
                                         if _loopRowKey == "":
                                             if _loopRowValue != "":
@@ -129,16 +130,22 @@ def getConfigFromSheet(targetSheet_):
                                 # 下一行就超界，当前行肯定不是数组。不是数组的就进行记录
                                 _parameterObject["val"] = _currentRowValue
                         else:
-                            # 不是数组的就进行记录
+                            # 没有下一行的话，就直接获取当前的值
                             _parameterObject["val"] = _currentRowValue
                         # 录制当前键值
-                        _parameters.append(_parameterObject)
+                        if str(_parameterObject["val"]).strip() != "":
+                            _parameters.append(_parameterObject)
                 # 录制当前工作节点
                 _works.append(_workInfo)
     print "==================================================\n"
     # print "_workFlowInfo = " + str(json.dumps(_workFlowInfo, indent=4, sort_keys=False, ensure_ascii=False))
     return _workFlowInfo
 
+def checkStrForList(str_):
+    if str_.find(",") >=0 :
+        print "ERROR 列表参数，任何一项都不能有逗号 ',' : " +str_
+        sys.exit(1)
+    return str_
 
 def doWorkFlow(workFlowInfo_):
     _name = workFlowInfo_["name"]
@@ -160,6 +167,7 @@ def doWork(workInfo_, subLogBool_):
         _parInfo = _pars[_i]
         _key = _parInfo["key"]
         _val = _parInfo["val"]
+        # 参数是列表的，转换成 , 链接的字符串
         if type(_val) is types.ListType:
             _val = ",".join(_val)
         _val = SysInfo.setCmdStr(_val)

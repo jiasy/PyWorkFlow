@@ -10,3 +10,4 @@ excel/_work_*
 .idea
 ~$luaLogTrail.xlsx
 LogTrailUtilTest.lua
+~$baseDockerContainer.xlsx

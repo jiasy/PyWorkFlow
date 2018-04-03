@@ -52,8 +52,7 @@ def getOps(opsDict_, parse_):
     # 解析每一个参数
     for _key in opsDict_:
         if not _ops.__dict__[_key]:
-            print "ERROR : 必须有 " + _key + " -> " + opsDict_[_key]
-            sys.exit(1)
+            print "WARNING : <" + _key + ":" + opsDict_[_key] + "> 空参数"
         else:
             # 当参数是 jenkins.xx 的时候，代表从jenkins的共享参数中取数据
             _ops.__dict__[_key] = getCmdStr(_ops.__dict__[_key])
