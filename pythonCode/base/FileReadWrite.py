@@ -118,6 +118,8 @@ def deleteFileTypeInFolder(folderPath_, fileType_):
 
 # 写文件
 def writeFileWithStr(filePath_, codeStr_):
+    if not os.path.exists(os.path.dirname(filePath_)):
+        os.makedirs(os.path.dirname(filePath_))
     try:
         _file = open(filePath_, 'w')
         try:
