@@ -12,3 +12,4 @@ excel/_work_*
 LogTrailUtilTest.lua
 ~$baseDockerContainer.xlsx
 ~$rsyncFile.xlsx
+~$excelDataToJson.xlsx
