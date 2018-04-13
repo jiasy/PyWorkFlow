@@ -88,15 +88,13 @@ def getBoolByStr(str_):
 
 
 # 设置参数
-# <_> 转换回 空格
 def getCmdStr(val_):
-    return val_.replace('\<', '<').replace('\>', '>').replace("<_>", " ")
+    return val_.replace('\<', '<').replace('\>', '>').replace("\ ", " ")
 
 
 # 获取参数
-# 空格 转换回 <_>
 def setCmdStr(val_):
-    return val_.replace('\\', '\\\\').replace('(', '\(').replace(')', '\)').replace(' ', '<_>').replace('<', '\<').replace('>', '\>').replace('\"', '\\"')
+    return val_.replace('\\', '\\\\').replace('(', '\(').replace(')', '\)').replace(' ', '\ ').replace('<', '\<').replace('>', '\>').replace('\"', '\\"')
 
 
 # 上层路径

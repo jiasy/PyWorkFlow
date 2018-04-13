@@ -230,13 +230,13 @@ if __name__ == '__main__':
             # 一行内有两个function。。。
             _twoFunRegInLine = re.search(r'^.*function\s*.*\s*\(.*\)\s*.*\s+function', _line)
             if _twoFunRegInLine:
-                print("ERROR 一行 两个function")
+                print("ERROR 一行 两个function : "+_line)
                 sys.exit(1)
 
             # 一行内是否有两个end
             _twoEndRegInLine = re.search(r'^.*\s*(\)?)\s*end\s*.*\s+(\)?)\s*end', _line)
             if _twoFunRegInLine:
-                print("ERROR 一行 两个end")
+                print("ERROR 一行 两个end : "+_line)
                 sys.exit(1)
 
             # 当前行可能是一个function -------------------------------------------------------------------
@@ -328,10 +328,13 @@ if __name__ == '__main__':
                     _allPath = (_shortPath + _filterClassFuncJoin + _currentFuncDict["name"])
                     _currentFuncDict["allPath"] = _allPath
                     _currentFuncDict["fiterPrintBoo"] = (_allPath in _filterPrints)
-                    if _currentFuncDict["fiterPrintBoo"]:
-                        print "_currentFuncDict[\"name\"] = " + str(_currentFuncDict["name"])
                     if _currentFuncDict["name"] == "":  # 匿名函数直接过滤
                         _currentFuncDict["fiterPrintBoo"] = True
+                    else:
+                        print _currentFuncDict["name"]
+                    if _currentFuncDict["fiterPrintBoo"]:
+                        # print "_currentFuncDict[\"name\"] = " + str(_currentFuncDict["name"])
+                        pass
                     # 当前的方法还没有return过
                     _currentFuncDict["isReturnBoo"] = False
                     # print "_tempFuncDict[\"fiterPrintBoo\"] = " + str(_tempFuncDict["fiterPrintBoo"])
@@ -505,4 +508,4 @@ if __name__ == '__main__':
         _luaCodes.insert(0, _requireStr + "\r\n")
         _luaCodeStr = string.join(_luaCodes, "")
         _luaCodeStr = CommonUtils.removeAnnoyingChars(_luaCodeStr)
-        FileReadWrite.writeFileWithStr(_luaPath, _luaCodeStr)
+        # FileReadWrite.writeFileWithStr(_luaPath, _luaCodeStr)
