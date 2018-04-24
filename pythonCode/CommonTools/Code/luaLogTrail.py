@@ -43,6 +43,7 @@ opsDict["filterFiles"] = '需要过滤掉的File'
 opsDict["regFilters"] = '满足正则表达式的行，过滤掉'
 opsDict["logToolPath"] = 'lua工具的路径'
 opsDict["logImportCode"] = 'lua工具的引用的代码'
+opsDict["__option__"] = ["filterFiles", "filterLogs", "regFilters"]
 
 
 def getLogOut(path_, funcName_, comment_, pass_, par_):
@@ -89,7 +90,9 @@ if __name__ == '__main__':
     _luaUtilPath = _ops.logToolPath
     _requireStr = _ops.logImportCode
 
-    _regFilters = _ops.regFilters.split(",")
+    _regFilters = []
+    if _ops.regFilters:
+        _regFilters = list(_ops.regFilters.split(","))
 
     # 后缀
     _codeSuffix = ".lua"
@@ -100,12 +103,18 @@ if __name__ == '__main__':
     FileCopy.folderBackUp(_ops.targetFolderPath)
 
     # 获取过滤字典
-    _filterLogsList = _ops.filterLogs.split(",")
-    _filterLogsDict = CommonUtils.strToListDict(_ops.filterLogs, _codeSuffix)
-    _filterPrints = CommonUtils.listDictToList(_filterLogsDict, _filterClassFuncJoin)
+    _filterLogsList = []
+    _filterLogsDict = {}
+    _filterPrints = []
+    if _ops.filterLogs:
+        _filterLogsList = list(_ops.filterLogs.split(","))
+        _filterLogsDict = CommonUtils.strToListDict(_ops.filterLogs, _codeSuffix)
+        _filterPrints = CommonUtils.listDictToList(_filterLogsDict, _filterClassFuncJoin)
 
     # 获取过滤的文件
-    _filterFilesList = list(_ops.filterFiles.split(","))
+    _filterFilesList = []
+    if _ops.filterFiles:
+        _filterFilesList = list(_ops.filterFiles.split(","))
 
     # 过滤文件后缀
     _fileFilter = [_codeSuffix]
@@ -230,13 +239,13 @@ if __name__ == '__main__':
             # 一行内有两个function。。。
             _twoFunRegInLine = re.search(r'^.*function\s*.*\s*\(.*\)\s*.*\s+function', _line)
             if _twoFunRegInLine:
-                print("ERROR 一行 两个function : "+_line)
+                print("ERROR 一行 两个function : " + _line)
                 sys.exit(1)
 
             # 一行内是否有两个end
             _twoEndRegInLine = re.search(r'^.*\s*(\)?)\s*end\s*.*\s+(\)?)\s*end', _line)
             if _twoFunRegInLine:
-                print("ERROR 一行 两个end : "+_line)
+                print("ERROR 一行 两个end : " + _line)
                 sys.exit(1)
 
             # 当前行可能是一个function -------------------------------------------------------------------
@@ -508,4 +517,4 @@ if __name__ == '__main__':
         _luaCodes.insert(0, _requireStr + "\r\n")
         _luaCodeStr = string.join(_luaCodes, "")
         _luaCodeStr = CommonUtils.removeAnnoyingChars(_luaCodeStr)
-        # FileReadWrite.writeFileWithStr(_luaPath, _luaCodeStr)
+        FileReadWrite.writeFileWithStr(_luaPath, _luaCodeStr)

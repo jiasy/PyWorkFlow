@@ -36,6 +36,9 @@ opsDict = {}
 opsDict["excelFolderPath"] = 'excel所在文件夹'
 opsDict["excelName"] = 'excel名称'
 opsDict["jenkinsParameters"] = '当前Jenkins的全局参数，供各个work阶段使用'
+opsDict["__option__"] = ["jenkinsParameters"]
+
+
 
 # 通过Excel名，直接执行Excel中配置的WorkFlow，Excel的名字可以直接写成汉子[比如 : 打包.xlsx，热更.xlsx，服务端代码上传.xlsx]
 # 	然后在Jenkins 下面 配置一个公共的 excelFolderPath 参数。
@@ -53,12 +56,14 @@ if __name__ == '__main__':
     _excelPath = os.path.join(_ops.excelFolderPath, _ops.excelName + ".xlsx")
     _cmd = Excel.getExcuteCmd(_excelPath)
 
-    # 当前 Jenkins 全局参数的留存文件。独立脚本执行的时候内存不共享，所以，参数存到临时目录。
-    _jenkinsParametersDict = CommonUtils.strListToDict(_ops.jenkinsParameters)
-    # 将其中的value参数话一下。
-    for _key in _jenkinsParametersDict:
-        print  _key + " : " + _jenkinsParametersDict[_key]
-        _jenkinsParametersDict[_key] = SysInfo.setCmdStr(_jenkinsParametersDict[_key])
+    _jenkinsParametersDict = {}
+    if _ops.jenkinsParameters :
+        # 当前 Jenkins 全局参数的留存文件。独立脚本执行的时候内存不共享，所以，参数存到临时目录。
+        _jenkinsParametersDict = CommonUtils.strListToDict(_ops.jenkinsParameters)
+        # 将其中的value参数话一下。
+        for _key in _jenkinsParametersDict:
+            print  _key + " : " + _jenkinsParametersDict[_key]
+            _jenkinsParametersDict[_key] = SysInfo.setCmdStr(_jenkinsParametersDict[_key])
 
     # 重新创建临时路径
     _tempFolder = os.path.abspath(os.path.join(os.path.dirname(os.path.realpath(__file__)), os.pardir, os.pardir, os.pardir, "temp"))

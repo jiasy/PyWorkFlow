@@ -140,9 +140,9 @@ def gci(filepath_, fileFilter_, fileList_):
         if os.path.isdir(fi_d):
             gci(fi_d, fileFilter_, fileList_)
         else:
-            jsPath = os.path.join(filepath_, fi_d)
-            if jsPath and (os.path.splitext(jsPath)[1] in fileFilter_):
-                fileList_.append(jsPath)
+            _filePath = os.path.join(filepath_, fi_d)
+            if _filePath and (os.path.splitext(_filePath)[1] in fileFilter_):
+                fileList_.append(_filePath)
 
 
 # filepath_  中，所有文件路径

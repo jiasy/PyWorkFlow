@@ -89,7 +89,7 @@ def getBoolByStr(str_):
 
 # 设置参数
 def getCmdStr(val_):
-    return val_.replace('\<', '<').replace('\>', '>').replace("\ ", " ")
+    return val_.replace('\<', '<').replace('\>', '>').replace("\ ", " ").replace('\\\\', '\\')
 
 
 # 获取参数

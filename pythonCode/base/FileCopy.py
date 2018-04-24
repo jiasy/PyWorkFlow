@@ -17,14 +17,7 @@ import getopt
 import errno
 import getpass
 from biplist import *
-
-from SysInfo import os_is_win32
-from SysInfo import os_is_32bit_windows
-from SysInfo import os_is_mac
-from SysInfo import os_is_linux
-from SysInfo import add_path_prefix
-from SysInfo import getParentPath
-from SysInfo import getBaseName
+import SysInfo
 from FileReadWrite import writeFileWithStr
 
 
@@ -33,7 +26,7 @@ def filTransformWithFolderStructure(sourceFilePath_, sourceMainFolderPath_, targ
     sourceMainFolderPath_ = SysInfo.add_path_prefix(sourceMainFolderPath_)
     targetMainFolderPath_ = SysInfo.add_path_prefix(targetMainFolderPath_)
     # 相对路径
-    _relativeFolderPath = getRelativePath(sourceMainFolderPath_, sourceFilePath_)
+    _relativeFolderPath = SysInfo.getRelativePath(sourceMainFolderPath_, sourceFilePath_)
     _fileName = None
     # 不是一个文件夹，就取得它的上一级文件夹路径
     if not os.path.isdir(_relativeFolderPath):
@@ -60,9 +53,9 @@ def filTransformWithFolderStructure(sourceFilePath_, sourceMainFolderPath_, targ
 
 def folderBackUp(folderPath_):
     # 上层路径
-    _folderParentPath = getParentPath(folderPath_)
+    _folderParentPath = SysInfo.getParentPath(folderPath_)
 
-    _backUpPath = os.path.join(_folderParentPath, getBaseName(folderPath_) + "_backUp")
+    _backUpPath = os.path.join(_folderParentPath, SysInfo.getBaseName(folderPath_) + "_backUp")
     # 有备份
     if os.path.exists(_backUpPath):
         # 没有源，有可能删了。【代码执行错误的时候，会删除源，因为，源会变】
@@ -117,8 +110,8 @@ def copy_files_in_dir(src, dst, log_):
     for item in os.listdir(src):
         path = os.path.join(src, item)
         if os.path.isfile(path):
-            path = add_path_prefix(path)
-            copy_dst = add_path_prefix(dst)
+            path = SysInfo.add_path_prefix(path)
+            copy_dst = SysInfo.add_path_prefix(dst)
             shutil.copy(path, copy_dst)
             if log_:
                 print "---File Copy---"
@@ -127,7 +120,7 @@ def copy_files_in_dir(src, dst, log_):
         if os.path.isdir(path):
             new_dst = os.path.join(dst, item)
             if not os.path.isdir(new_dst):
-                os.makedirs(add_path_prefix(new_dst))
+                os.makedirs(SysInfo.add_path_prefix(new_dst))
             copy_files_in_dir(path, new_dst, log_)
 
 
@@ -153,15 +146,15 @@ def copy_files_with_config_single(config, src_root, dst_root, log_):
 def copy_files_with_rules(src_rootDir, src, dst, log_, include=None, exclude=None):
     if os.path.isfile(src):
         if not os.path.exists(dst):
-            os.makedirs(add_path_prefix(dst))
-        copy_src = add_path_prefix(src)
-        copy_dst = add_path_prefix(dst)
+            os.makedirs(SysInfo.add_path_prefix(dst))
+        copy_src = SysInfo.add_path_prefix(src)
+        copy_dst = SysInfo.add_path_prefix(dst)
         shutil.copy(copy_src, copy_dst)
         return
 
     if (include is None) and (exclude is None):
         if not os.path.exists(dst):
-            os.makedirs(add_path_prefix(dst))
+            os.makedirs(SysInfo.add_path_prefix(dst))
         copy_files_in_dir(src, dst, log_)
     elif (include is not None):
         # have include
@@ -175,10 +168,10 @@ def copy_files_with_rules(src_rootDir, src, dst, log_, include=None, exclude=Non
             elif os.path.isfile(abs_path):
                 if _in_rules(rel_path, include):
                     if not os.path.exists(dst):
-                        os.makedirs(add_path_prefix(dst))
+                        os.makedirs(SysInfo.add_path_prefix(dst))
 
-                    abs_path = add_path_prefix(abs_path)
-                    copy_dst = add_path_prefix(dst)
+                    abs_path = SysInfo.add_path_prefix(abs_path)
+                    copy_dst = SysInfo.add_path_prefix(dst)
                     shutil.copy(abs_path, copy_dst)
     elif (exclude is not None):
         # have exclude
@@ -192,10 +185,10 @@ def copy_files_with_rules(src_rootDir, src, dst, log_, include=None, exclude=Non
             elif os.path.isfile(abs_path):
                 if not _in_rules(rel_path, exclude):
                     if not os.path.exists(dst):
-                        os.makedirs(add_path_prefix(dst))
+                        os.makedirs(SysInfo.add_path_prefix(dst))
 
-                    abs_path = add_path_prefix(abs_path)
-                    copy_dst = add_path_prefix(dst)
+                    abs_path = SysInfo.add_path_prefix(abs_path)
+                    copy_dst = SysInfo.add_path_prefix(dst)
                     shutil.copy(abs_path, copy_dst)
 
 
@@ -217,20 +210,3 @@ def convert_rules(rules):
         ret = "%s" % ret
         ret_rules.append(ret)
     return ret_rules
-
-
-# ------------------------------------测试用例---------------------------------------------------------------------------------------
-if __name__ == '__main__':
-    # s source
-    # t target
-    opts, args = getopt.getopt(sys.argv[1:], "hs:t:c:")
-    _sourceFolder = None
-    _targetFolder = None
-    _configPath = None
-    for _op, _value in opts:
-        if _op == "-s":
-            _sourceFolder = _value
-        elif _op == "-t":
-            _targetFolder = _value
-        elif _op == "-c":
-            _configPath = _value

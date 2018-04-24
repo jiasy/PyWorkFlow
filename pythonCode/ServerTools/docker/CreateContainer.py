@@ -41,8 +41,9 @@ opsDict["publish"] = '端口映射列表'
 opsDict["volume"] = '共享磁盘路径列表'
 opsDict["link"] = '链接容器列表'
 opsDict["env"] = '环境变量'
+opsDict["net"] = '网络链接模式'
 # 可选项包括,可选项可以不填写
-opsDict["__option__"] = ["env","link","volume","publish","restart","privileged","hostname"]
+opsDict["__option__"] = ["net","env","link","volume","publish","restart","privileged","hostname"]
 
 # 只映射部分端口
 if __name__ == '__main__':
@@ -64,6 +65,8 @@ if __name__ == '__main__':
     _restart = CommonUtils.getParameterStr("restart", _ops.restart, False)
     # 容器名
     _name = CommonUtils.getParameterStr("name", _ops.name, False)
+    # 网络链接方式
+    _net = CommonUtils.getParameterStr("net", _ops.net, True)
 
     _cmd = '\
 docker run -d ' + '\
@@ -75,6 +78,7 @@ docker run -d ' + '\
 ' + _volumeListStr + ' \
 ' + _linkListStr + ' \
 ' + _envListStr + ' \
+' + _net + ' \
 ' + _ops.imageNameAndVersion + ' \
 '
 
