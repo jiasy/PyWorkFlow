@@ -28,19 +28,20 @@ import FileCopy
 import FileReadWrite
 import SysInfo
 import SysCmd
-import ExcelUtils
-import ExcelDataUtils
+import JsonMerge
 
-# 列表结构的excel数据输出，json结构的数据输出
+# 修改所需属性
 opsDict = {}
-opsDict["commands"] = '要执行的命令序列'
+opsDict["checkFilePath"] = '要校验的文件路径'
+opsDict["content"] = '校验的文件内容'
 
-# 依次执行每一行命令
-# ------------------------------------------------------------------------------------------------------------------
+# json 合并
+# 相同层级的同名字段会覆盖，如有覆盖情况，请注意先后顺序
+# ------------------------------------测试用例---------------------------------------------------------------------------------------
 if __name__ == '__main__':
     _ops = SysInfo.getOps(opsDict, OptionParser())
     _currentFolder = SysInfo.fixFolderPath(os.path.dirname(os.path.realpath(__file__)))
-    _commands = _ops.commands.split(",")
-    for _i in range(len(_commands)):
-        _command = _commands[_i]
-        SysCmd.doShellGetOutPut(_command)
+    # 校验文件内容，是否一致
+    _content = FileReadWrite.contentFromFile(_ops.checkFilePath)
+    if not _content == _ops.content:
+        sys.exit(1)
