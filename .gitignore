@@ -14,3 +14,7 @@ LogTrailUtilTest.lua
 ~$rsyncFile.xlsx
 ~$excelDataToJson.xlsx
 ~$MergeJsonFile.xlsx
+jsStateMachineEnglish.xlsx
+~$jsStateMachineEnglish.xlsx
+StateMachineEnglish.xlsx
+JsStateMachineCreatorEnglish.py
