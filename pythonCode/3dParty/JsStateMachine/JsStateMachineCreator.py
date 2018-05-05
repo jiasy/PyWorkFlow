@@ -90,7 +90,7 @@ if __name__ == '__main__':
                     _transitionsList.append(_stateTransDict)
         # 生成 js 给 代码用。
         _targetJsonPath = os.path.join(_ops.jsonFolder, _sheetName + ".json")
-        FileReadWrite.writeFileWithStr(_targetJsonPath, str(json.dumps(_stateToDict, indent=4, sort_keys=False, ensure_ascii=False)))
+        FileReadWrite.writeFileWithStr(_targetJsonPath, str(json.dumps(_stateToDict, indent=4, sort_keys=False)))
 
         # 构成 dot 文件
         _dot_state_str = "digraph " + _sheetName + " { "+_stateList[0]+" [shape = Msquare]\n"
@@ -106,5 +106,5 @@ if __name__ == '__main__':
         FileReadWrite.writeFileWithStr(_targetDotPath, _dot_state_str)
         _graphCmd = "dot " + _targetDotPath + " -T png -o " + _targetPngPath
 
-        # print "_graphCmd = " + str(_graphCmd)
+        print "_graphCmd = " + str(_graphCmd)
         SysCmd.doShellGetOutPut(_graphCmd)
