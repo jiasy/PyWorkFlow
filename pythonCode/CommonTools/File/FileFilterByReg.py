@@ -61,10 +61,10 @@ if __name__ == '__main__':
                     break
             if _needCopyBoo:
                 # 不在过滤的正则匹配中，就拷贝
-                FileCopy.filTransformWithFolderStructure(_filePath, _ops.sourceFolder, _ops.targetFolder)
+                FileCopy.fileTransformWithFolderStructure(_filePath, _ops.sourceFolder, _ops.targetFolder)
                 # print "true"
         else:
             # 没有正则列表，直接拷贝。
-            FileCopy.filTransformWithFolderStructure(_filePath, _ops.sourceFolder, _ops.targetFolder)
+            FileCopy.fileTransformWithFolderStructure(_filePath, _ops.sourceFolder, _ops.targetFolder)
             # print "true"
 

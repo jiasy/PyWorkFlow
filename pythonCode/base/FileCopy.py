@@ -22,7 +22,7 @@ from FileReadWrite import writeFileWithStr
 
 
 # 单一文件，按照相对文件路径平移
-def filTransformWithFolderStructure(sourceFilePath_, sourceMainFolderPath_, targetMainFolderPath_):
+def fileTransformWithFolderStructure(sourceFilePath_, sourceMainFolderPath_, targetMainFolderPath_):
     sourceMainFolderPath_ = SysInfo.add_path_prefix(sourceMainFolderPath_)
     targetMainFolderPath_ = SysInfo.add_path_prefix(targetMainFolderPath_)
     # 相对路径

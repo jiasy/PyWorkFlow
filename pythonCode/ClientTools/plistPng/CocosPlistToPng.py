@@ -52,8 +52,8 @@ if __name__ == '__main__':
         _pngPath = SysInfo.getPathWithOutPostfix(_plistPath) + ".png"
         if os.path.exists(_pngPath):
             # 拷贝到新路径下
-            SysInfo.filTransformWithFolderStructure(_plistPath, _ops.sourceFolder, _ops.putInToFolder)
-            SysInfo.filTransformWithFolderStructure(_pngPath, _ops.sourceFolder, _ops.putInToFolder)
+            FileCopy.fileTransformWithFolderStructure(_plistPath, _ops.sourceFolder, _ops.putInToFolder)
+            FileCopy.fileTransformWithFolderStructure(_pngPath, _ops.sourceFolder, _ops.putInToFolder)
             # 执行脚本路径，大图所在的路径
             _cmdPath = os.path.dirname(_pngPath)
             _bigPicNameWithOutPostfix = SysInfo.justName(_pngPath)  # 纯名
